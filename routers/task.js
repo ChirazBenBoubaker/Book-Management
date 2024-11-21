@@ -4,6 +4,7 @@ import {
   getTaskByID,
   UpdateTask,
   AddTask,
+  AddTaskV2,
 } from "../Controller/task.js";
 import User from "../models/user.js";
 import express from "express";
@@ -17,6 +18,7 @@ router.get("/", loggedMiddleware, isAdmin, fetchTasks);
 router.get("/:id", getTaskByID);
 
 router.post("/", AddTask);
+router.post("/", AddTaskV2);
 
 router.patch("/:id", UpdateTask);
 

@@ -1,22 +1,33 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import userValidationSchema from "../validator/UserValidator.js";
 
 export const JWT_SECRET = "chiraz";
 export const SignUp = async (req, res, next) => {
   try {
     const hashedPwd = await bcrypt.hash(req.body.password, 10);
-    const user = new User({
-      // email: req.body.email,
-      ...req.body,
-      password: hashedPwd,
-    });
+    // Valider le corps de la requête avec Joi
+    const validatedData = await userValidationSchema.validateAsync(req.body);
+    
+    // const user = new User({
+    //   // email: req.body.email,
+    //   ...req.body,
+    //   password: hashedPwd,
+    // });
+    const user = new User(validatedData);
     await user.save();
     //delete user.password;
     const { password, ...newUser } = user.toObject();
     res.status(201).json({ model: newUser, message: "success " });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  } catch (err) {
+    if (err.isJoi) {
+      // Retourner les erreurs Joi si présentes
+      res.status(400).json({ message: err.details[0].message });
+    } else {
+      // Autres erreurs
+      res.status(500).json({ message: err.message });
+    }
   }
 };
 

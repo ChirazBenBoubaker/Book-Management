@@ -6,7 +6,9 @@ import User from "./models/user.js";
 import routerTasks from "./routers/task.js"
 import UserTasks from "./routers/user.js"
 import Authrouter from "./routers/user.js";
- 
+import Authorrouter from "./routers/author.js";
+import Categoryrouter from "./routers/category.js";
+import Eventrouter from "./routers/event.js";
 
 const app = express();
 
@@ -26,6 +28,11 @@ app.use(cors()); //ici tous le monde passe , il faut ajouter une liste de middle
 app.use(express.json());
 app.use("/api/tasks", routerTasks)
 app.use("/api/auth", Authrouter)
+app.use("/api/author", Authorrouter)
+app.use("/api/Category", Categoryrouter)
+app.use("/api/event", Eventrouter)
+
+
 
 
 export default app;
